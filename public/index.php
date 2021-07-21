@@ -21,9 +21,11 @@ if(class_exists($controllerClass)){
     die("Контроллер не существует.");
 }
 
-//Запрос к бд
-//$db = new Db();
-//$id=1;
+
+
+Запрос к бд
+$db = new Db();
+$id=1;
 //$result = $db->getConnection()->prepare("SELECT * FROM `users` WHERE `id`=:id ");
 //$result->bindParam(':id', $id, \PDO::PARAM_INT);
 //$result->execute(['id'=>$id]);
