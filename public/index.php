@@ -21,10 +21,6 @@ if(class_exists($controllerClass)){
     die("Контроллер не существует.");
 }
 
-
-
-
-
 //Запрос к бд
 //$db = new Db();
 //$id=1;
