@@ -14,9 +14,12 @@ abstract class DbModel extends Model
         return Db::getInstance()->queryObject($sql, ['id' => $id], static::class);
     }
 
-    public static function getLimit($to){
+    public static function getLimit($page){
         $tableName = static::getTableName();
-        $sql = "SELECT * FROM {$tableName} LIMIT 0, :to";
+//        $sql = "SELECT * FROM {$tableName} LIMIT :page";
+        $sql = "SELECT * FROM {$tableName} LIMIT ?";
+        return DB::getInstance()->queryLimit($sql, $page);
+
         //db2_bind_param()
         //return Db::getInstance()->queryLimit();
         //TODO доделать getlimit
@@ -32,10 +35,11 @@ abstract class DbModel extends Model
 
     public function insert()
     {
+        //TODO в идеале, сформировавшийся запрос должен содержать только изменившиеся поля
         $params = [];
         $columns = [];
         foreach ($this as $key=>$value){
-            if($key == 'id') continue;
+            if($key == 'id'||$key == 'props') continue;
             $params[":$key"] = $value;
             $columns[] = "`$key`";
         }
@@ -48,18 +52,20 @@ abstract class DbModel extends Model
         Db::getInstance()->execute($sql,$params);
 
         $this->id = Db::getInstance()->lastInsertId();
+
     }
 
     public function update(){
-        //TODO сделать UPDATE в идеале, сформировавшийся запрос должен содержать только изменившиеся поля
-        //сделал, проверить как сделает преподователь
         $params = [];
         $values = [];
-        foreach($this as $key=>$value){
-            $params[":$key"] = $value;
-            if($key == 'id') continue;
+
+        foreach ($this->props as $key=>$value) {
+            if(!$value) continue;
+            $params[":$key"] = $this->$key;
             $values[] = "`$key`" . " = " .  ":$key";
+            $this->props[$key] = false;
         }
+        $params[":id"] = $this->id;
         $updateString = implode(", ", $values);
         $sql = "UPDATE {$this->getTableName()} SET {$updateString} WHERE id = :id";
         Db::getInstance()->execute($sql,$params);

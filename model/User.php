@@ -4,6 +4,7 @@ namespace app\model;
 
 class User extends DbModel
 {
+    //TODO перевести в протектед и добавить массив свойст
     public $id;
     public $login;
     public $pass;

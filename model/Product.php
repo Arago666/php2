@@ -4,10 +4,16 @@ namespace app\model;
 
 class Product extends DbModel
 {
-    public $id;
-    public $name;
-    public $description;
-    public $price;
+    protected $id;
+    protected $name;
+    protected $description;
+    protected $price;
+
+    protected $props = [
+        'name' => false,
+        'description' => false,
+        'price' => false
+    ];
 
     public function __construct($name = null, $description = null, $price = null)
     {

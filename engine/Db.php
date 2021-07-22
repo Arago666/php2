@@ -40,6 +40,15 @@ class Db
         );
     }
 
+    public function queryLimit($sql, $page){
+        $pdoStatement = $this->getConnection()->prepare($sql);
+        $pdoStatement->bindValue(1,$page, \PDO::PARAM_INT);
+        $pdoStatement->execute();
+        return $pdoStatement->fetchAll();
+//        $pdoStatement->execute($params);
+//        return $pdoStatement;
+    }
+
     public function queryObject($sql, $params, $class){
         $statement = $this->query($sql, $params);
         $statement->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $class);

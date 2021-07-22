@@ -2,20 +2,32 @@
 include realpath("../config/config.php");
 include realpath("../engine/Autoload.php");
 use app\model\{Product, User};
-
+use app\engine\Render;
 
 spl_autoload_register([new Autoload(), 'loadClass']);
 
+//$product =  Product::getOne(1);
+//var_dump($product);
+//$product->name = "Пицца876";
+////$product->price = 888;
+//$product->save();
+//var_dump($product);
+
+
 //http://php2/php2/public/ ?c=product & a=catalog
-$controllerName = $_GET['c'] ?: 'product';
-$actionName = $_GET['a'];
+$url = explode('/',$_SERVER['REQUEST_URI']);
+
+$controllerName = $url[2]?:'product';
+$actionName = $url[3];
+//$controllerName = $_GET['c'] ?: 'product';
+//$actionName = $_GET['a'];
 
 $controllerClass = CONTROLLER_NAMESPACE . ucfirst($controllerName) . "Controller";
 
-var_dump($controllerClass);
+//var_dump($controllerClass);
 
 if(class_exists($controllerClass)){
-    $controller = new $controllerClass;
+    $controller = new $controllerClass(New Render());
     $controller->runAction($actionName);
 } else {
     die("Контроллер не существует.");
@@ -23,9 +35,9 @@ if(class_exists($controllerClass)){
 
 
 
-Запрос к бд
-$db = new Db();
-$id=1;
+//Запрос к бд
+//$db = new Db();
+//$id=1;
 //$result = $db->getConnection()->prepare("SELECT * FROM `users` WHERE `id`=:id ");
 //$result->bindParam(':id', $id, \PDO::PARAM_INT);
 //$result->execute(['id'=>$id]);
@@ -38,6 +50,7 @@ $id=1;
 
 //insert
 //$product = new Product('Чай','Цейлонский','123');
+//$product->save();
 //$product = Product::getOne(2);
 //$product->description = "Измененное значение апельсинки";
 //$product->price = 999;
