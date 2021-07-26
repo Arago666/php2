@@ -5,6 +5,7 @@ use app\model\{Product, User};
 use app\engine\Render;
 
 spl_autoload_register([new Autoload(), 'loadClass']);
+//require_once '/path/to/vendor/autoload.php';
 
 //$product =  Product::getOne(1);
 //var_dump($product);

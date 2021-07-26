@@ -17,9 +17,9 @@ abstract class Controller
      * Controller constructor.
      * @param $renderer
      */
-    public function __construct(IRenderer $render)
+    public function __construct(IRenderer $renderer)
     {
-        $this->renderer = $render;
+        $this->renderer = $renderer;
     }
 
 
