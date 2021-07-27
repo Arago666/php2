@@ -5,6 +5,7 @@ foreach ($catalog as $item): ?>
 
     <p><?=$item['description']?></p>
     <p>Цена: <?=$item['price']?> </p>
+    <button>Купить</button>
 <hr>
 <? endforeach;?>
 

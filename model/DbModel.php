@@ -7,11 +7,17 @@ use app\engine\Db;
 abstract class DbModel extends Model
 {
 
+//    private $tableName;
+
     public static function getOne($id)
     {
         $tableName = static::getTableName();
         $sql = "SELECT * FROM {$tableName} WHERE id = :id";
         return Db::getInstance()->queryObject($sql, ['id' => $id], static::class);
+    }
+
+    public static function getJoin($table1, $table2, $id1, $id2){
+      //  Db::table('basket')->where('name', 'admin')->andwhere('login','123')->get();
     }
 
     public static function getLimit($page){
@@ -38,9 +44,10 @@ abstract class DbModel extends Model
         //TODO в идеале, сформировавшийся запрос должен содержать только изменившиеся поля
         $params = [];
         $columns = [];
-        foreach ($this as $key=>$value){
-            if($key == 'id'||$key == 'props') continue;
-            $params[":$key"] = $value;
+//        foreach ($this as $key=>$value){
+        foreach ($this->props as $key=>$value){
+//            $params[":$key"] = $value;
+            $params[":$key"] = $this->$key;
             $columns[] = "`$key`";
         }
 

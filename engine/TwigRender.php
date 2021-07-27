@@ -8,7 +8,16 @@ use app\interfaces\IRenderer;
 
 class TwigRender implements IRenderer
 {
-    public function renderTemplate($template, $params = []){
+    private $twig;
 
+    public function __construct()
+    {
+        $loader = new \Twig\Loader\FilesystemLoader('../twigtemplates');
+        $this->twig = new \Twig\Environment($loader);
+    }
+
+    public function renderTemplate($template, $params = [])
+    {
+        return $this->twig->render($template . '.twig', $params);
     }
 }

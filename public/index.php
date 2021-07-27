@@ -5,18 +5,13 @@ use app\model\{Product, User};
 use app\engine\Render;
 
 spl_autoload_register([new Autoload(), 'loadClass']);
-//require_once '/path/to/vendor/autoload.php';
+//include realpath("../vendor/autoload.php");
 
-//$product =  Product::getOne(1);
-//var_dump($product);
-//$product->name = "Пицца876";
-////$product->price = 888;
-//$product->save();
-//var_dump($product);
 
 
 //http://php2/php2/public/ ?c=product & a=catalog
 $url = explode('/',$_SERVER['REQUEST_URI']);
+
 
 $controllerName = $url[2]?:'product';
 $actionName = $url[3];
@@ -28,6 +23,7 @@ $controllerClass = CONTROLLER_NAMESPACE . ucfirst($controllerName) . "Controller
 //var_dump($controllerClass);
 
 if(class_exists($controllerClass)){
+//    $controller = new $controllerClass(New \app\engine\TwigRender());
     $controller = new $controllerClass(New Render());
     $controller->runAction($actionName);
 } else {
@@ -77,3 +73,12 @@ if(class_exists($controllerClass)){
 //
 //var_dump($product);
 //var_dump(get_class_methods($product));
+
+//require_once '/path/to/vendor/autoload.php';
+
+//$product =  Product::getOne(1);
+//var_dump($product);
+//$product->name = "Пицца876";
+////$product->price = 888;
+//$product->save();
+//var_dump($product);
