@@ -8,7 +8,9 @@ use app\model\Basket;
 class BasketController extends Controller
 {
     public function actionIndex(){
-        $products = Basket::getBasket(session_id());
+        //TODO доделать с сессией
+//        $products = Basket::getBasket(session_id());
+        $products = Basket::getBasket(1);
         var_dump($products);
         echo $this->render('basket', ['products' => $products]);
     }
