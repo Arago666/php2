@@ -16,6 +16,12 @@ abstract class DbModel extends Model
         return Db::getInstance()->queryObject($sql, ['id' => $id], static::class);
     }
 
+    public static function getCountWhere($field, $value){
+        $tableName = static::getTableName();
+        $sql = "SELECT count(id) as count FROM {$tableName} WHERE {$field} = :value";
+        return DB::getInstance()->queryOne($sql, ["value" => $value])['count'];
+    }
+
     public static function getJoin($table1, $table2, $id1, $id2){
       //  Db::table('basket')->where('name', 'admin')->andwhere('login','123')->get();
     }

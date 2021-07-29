@@ -1,5 +1,5 @@
 <h2>Корзина</h2>
-<? if(!is_null($products)):  ?>
+<? if(!empty($products)):  ?>
     <? foreach ($products as $item): ?>
         <div>
             <h2><?= $item['name'] ?></h2>

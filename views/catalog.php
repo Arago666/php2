@@ -5,8 +5,13 @@ foreach ($catalog as $item): ?>
 
     <p><?=$item['description']?></p>
     <p>Цена: <?=$item['price']?> </p>
-    <button>Купить</button>
+    <button data-id="<?=$item['id']?>" class="buy">Купить</button>
 <hr>
 <? endforeach;?>
 
 <a href="/public/product/catalog/?page=<?=$page?>">Далее</a>
+
+<script>
+    let buttons = document.querySelectorAll('.buy');
+    buttons.forEach((elem) => {});
+</script>

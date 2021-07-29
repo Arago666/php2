@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\engine\Render;
 use app\interfaces\IRenderer;
+use app\model\Basket;
 
 abstract class Controller
 {
@@ -36,9 +37,13 @@ abstract class Controller
     public function render($template, $params = []){
         if($this->useLayout){
             return $this->renderTemplate("layouts/{$this->layout}",[
-                'menu' => $this->renderTemplate('menu',$params),
+//                'menu' => $this->renderTemplate('menu',$params),
+                'menu' => $this->renderTemplate('menu',[
+                    'count' => Basket::getCountWhere('session_id', 1)
+                ]),
                 'content' => $this->renderTemplate($template,$params)
             ]);
+            //TODO session id 'count' => Basket::getCountWhere('session_id', session_id())
         }else{
             return $this->renderTemplate($template, $params);
         }
