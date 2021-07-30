@@ -16,6 +16,7 @@ abstract class DbModel extends Model
         return Db::getInstance()->queryObject($sql, ['id' => $id], static::class);
     }
 
+    //TODO сделать похожий метод getSummWhere
     public static function getCountWhere($field, $value){
         $tableName = static::getTableName();
         $sql = "SELECT count(id) as count FROM {$tableName} WHERE {$field} = :value";

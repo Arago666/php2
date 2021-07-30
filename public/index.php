@@ -1,8 +1,9 @@
 <?php
+session_start();
 include realpath("../config/config.php");
 include realpath("../engine/Autoload.php");
 use app\model\{Product, User};
-use app\engine\Render;
+use app\engine\{Render, Request};
 
 spl_autoload_register([new Autoload(), 'loadClass']);
 //include realpath("../vendor/autoload.php");
@@ -10,11 +11,16 @@ spl_autoload_register([new Autoload(), 'loadClass']);
 
 
 //http://php2/php2/public/ ?c=product & a=catalog
-$url = explode('/',$_SERVER['REQUEST_URI']);
 
 
-$controllerName = $url[2]?:'product';
-$actionName = $url[3];
+//$url = explode('/',$_SERVER['REQUEST_URI']);
+//$controllerName = $url[2]?:'product';
+//$actionName = $url[3];
+$request = new Request();
+$controllerName = $request->getControllerName();
+$actionName = $request->getActionName();
+
+
 //$controllerName = $_GET['c'] ?: 'product';
 //$actionName = $_GET['a'];
 
