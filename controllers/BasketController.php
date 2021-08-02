@@ -19,6 +19,7 @@ class BasketController extends Controller
 //        $id = $data->id;
 
         $id = (int)(new Request())->getParams()['id'];
+
         (new Basket(session_id(),$id))->save();
 
         //возвращаем количество элементов в корзине

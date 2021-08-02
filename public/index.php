@@ -17,7 +17,7 @@ spl_autoload_register([new Autoload(), 'loadClass']);
 //$controllerName = $url[2]?:'product';
 //$actionName = $url[3];
 $request = new Request();
-$controllerName = $request->getControllerName();
+$controllerName = $request->getControllerName()?:'product';
 $actionName = $request->getActionName();
 
 
