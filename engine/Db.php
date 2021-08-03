@@ -52,7 +52,12 @@ class Db
     public function queryObject($sql, $params, $class){
         $statement = $this->query($sql, $params);
         $statement->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $class);
-        return $statement->fetch();
+//        return $statement->fetch();
+        $obj = $statement->fetch();
+        if(!$obj){
+            throw new \Exception("Продукт не найден", 404);
+        }
+        return $obj;
     }
 
     private function query($sql, $params){

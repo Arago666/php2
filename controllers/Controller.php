@@ -40,7 +40,7 @@ abstract class Controller
             return $this->renderTemplate("layouts/{$this->layout}",[
 //                'menu' => $this->renderTemplate('menu',$params),
                 'menu' => $this->renderTemplate('menu',[
-                    'count' => Basket::getCountWhere('session_id', session_id()),
+                    'count' => (new B)::getCountWhere('session_id', session_id()),
                     'auth' => User::isAuth(),
                     'username' => User::getName()
                 ]),

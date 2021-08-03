@@ -2,40 +2,40 @@
 
 
 namespace app\model;
+
+
 use app\engine\Db;
+use app\interfaces\IModel;
 
-abstract class DbModel extends Model
+abstract class Repository implements IModel
 {
-
-//    private $tableName;
-
-    public static function getOneWhere($field, $value){
-        $tableName = static::getTableName();
+    public function getOneWhere($field, $value){
+        $tableName = $this->getTableName();
         $sql = "SELECT * FROM {$tableName} WHERE `{$field}`=:value";
         return Db::getInstance()->queryObject($sql, ['value' => $value], static::class);
     }
 
 
-    public static function getOne($id)
+    public function getOne($id)
     {
-        $tableName = static::getTableName();
+        $tableName = $this->getTableName();
         $sql = "SELECT * FROM {$tableName} WHERE id = :id";
         return Db::getInstance()->queryObject($sql, ['id' => $id], static::class);
     }
 
     //TODO сделать похожий метод getSummWhere
-    public static function getCountWhere($field, $value){
-        $tableName = static::getTableName();
+    public function getCountWhere($field, $value){
+        $tableName = $this->getTableName();
         $sql = "SELECT count(id) as count FROM {$tableName} WHERE {$field} = :value";
         return DB::getInstance()->queryOne($sql, ["value" => $value])['count'];
     }
 
-    public static function getJoin($table1, $table2, $id1, $id2){
-      //  Db::table('basket')->where('name', 'admin')->andwhere('login','123')->get();
+    public function getJoin($table1, $table2, $id1, $id2){
+        //  Db::table('basket')->where('name', 'admin')->andwhere('login','123')->get();
     }
 
-    public static function getLimit($page){
-        $tableName = static::getTableName();
+    public function getLimit($page){
+        $tableName = $this->getTableName();
 //        $sql = "SELECT * FROM {$tableName} LIMIT :page";
         $sql = "SELECT * FROM {$tableName} LIMIT ?";
         return DB::getInstance()->queryLimit($sql, $page);
@@ -46,22 +46,22 @@ abstract class DbModel extends Model
 
     }
 
-    public static function getAll()
+    public function getAll()
     {
-        $tableName = static::getTableName();
+        $tableName = $this->getTableName();
         $sql = "SELECT * FROM {$tableName}";
         return Db::getInstance()->queryAll($sql);
     }
 
-    public function insert()
+    public function insert(Model $entity)
     {
         //TODO в идеале, сформировавшийся запрос должен содержать только изменившиеся поля
         $params = [];
         $columns = [];
 //        foreach ($this as $key=>$value){
-        foreach ($this->props as $key=>$value){
+        foreach ($entity->props as $key=>$value){
 //            $params[":$key"] = $value;
-            $params[":$key"] = $this->$key;
+            $params[":$key"] = $entity->$key;
             $columns[] = "`$key`";
         }
 
@@ -72,40 +72,41 @@ abstract class DbModel extends Model
 
         Db::getInstance()->execute($sql,$params);
 
-        $this->id = Db::getInstance()->lastInsertId();
+        $entity->id = Db::getInstance()->lastInsertId();
 
     }
 
-    public function update(){
+    public function update(Model $entity){
         $params = [];
         $values = [];
 
-        foreach ($this->props as $key=>$value) {
+        foreach ($entity->props as $key=>$value) {
             if(!$value) continue;
             $params[":$key"] = $this->$key;
             $values[] = "`$key`" . " = " .  ":$key";
-            $this->props[$key] = false;
+            $entity->props[$key] = false;
         }
-        $params[":id"] = $this->id;
+        $params[":id"] = $entity->id;
         $updateString = implode(", ", $values);
         $sql = "UPDATE {$this->getTableName()} SET {$updateString} WHERE id = :id";
         Db::getInstance()->execute($sql,$params);
     }
 
-    public function delete(){
-        $tableName = static::getTableName();
+    public function delete(Model $entity){
+        $tableName = $this->getTableName();
         $sql = "DELETE FROM {$tableName} WHERE id = :id";
-        return Db::getInstance()->execute($sql, ['id'=>$this->id])->rowCount();
+        return Db::getInstance()->execute($sql, ['id'=>$entity->id])->rowCount();
     }
 
-    public function save(){
-        if(is_null($this->id)){
-            $this->insert();
+    public function save(Model $entity){
+        if(is_null($entity->id)){
+            $this->insert($entity);
         }
         else{
-            $this->update();
+            $this->update($entity);
         }
     }
 
-    abstract static public function getTableName();
+    abstract public function getTableName();
+
 }

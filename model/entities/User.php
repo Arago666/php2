@@ -1,8 +1,10 @@
 <?php
 
-namespace app\model;
+namespace app\model\entities;
 
-class User extends DbModel
+use app\model\Model;
+
+class User extends Model
 {
 
     protected $id;
@@ -38,11 +40,4 @@ class User extends DbModel
             return false;
         }
     }
-
-    public static function getTableName()
-    {
-        return "users";
-    }
-
-
 }

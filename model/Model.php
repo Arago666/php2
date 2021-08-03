@@ -2,9 +2,7 @@
 
 namespace app\model;
 
-use app\interfaces\IModel;
-
-abstract class Model implements IModel
+abstract class Model
 {
     public function __set($name, $value){
         if(isset($this->$name)){

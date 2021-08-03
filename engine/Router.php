@@ -9,7 +9,7 @@ class Router
     private $router = [
         '/' => 'BasketController@index',
         '/catalog' => 'ProductController@catalog',
-        '/catalog/card/{id}' => 'ProductController@card'
+        '/catalog/card/{id}/edit/{name}' => 'ProductController@card'
     ];
 
     public function route(){

@@ -29,4 +29,26 @@ class BasketController extends Controller
         ]);
         die();
     }
+
+    public function actionDelete(){
+        $id = (int)(new Request())->getParams()['id'];
+
+        $basket = (new Basket())->getOne($id);
+        $session = session_id();
+        if($session == $basket->session_id){
+            $basket->delete();
+        }
+        else{
+            die;
+        }
+        //Basket::getOne($id)->delete();
+
+        //возвращаем количество элементов в корзине
+        echo json_encode([
+            'status' => 'ok',
+            'count' => Basket::getCountWhere('session_id', session_id()),
+        ]);
+//        header("Location: " . $_SERVER['HTTP_REFERER']);
+        die();
+    }
 }

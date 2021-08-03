@@ -20,6 +20,7 @@ class AuthController extends Controller
     }
 
     public function actionLogout(){
+        session_regenerate_id();
         session_destroy();
         //TODO завернуть в Request
         header("Location:" . $_SERVER['HTTP_REFERER']);
