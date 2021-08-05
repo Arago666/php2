@@ -4,7 +4,10 @@
 namespace app\controllers;
 
 
-use app\model\User;
+
+
+use app\model\entities\User;
+use app\model\repositories\UserRepository;
 
 class AuthController extends Controller
 {
@@ -12,7 +15,7 @@ class AuthController extends Controller
         //TODO Переделать на Request
         $login = $_POST['login'];
         $pass = $_POST['pass'];
-        if(User::auth($login, $pass)){
+        if((new UserRepository())->auth($login, $pass)){
             header("Location: " . $_SERVER['HTTP_REFERER']);
         } else{
             die("Неверный логин или пароль");

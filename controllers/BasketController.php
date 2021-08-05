@@ -4,12 +4,14 @@
 namespace app\controllers;
 
 use app\engine\Request;
-use app\model\Basket;
+
+use app\model\entities\Basket;
+use app\model\repositories\BasketRepository;
 
 class BasketController extends Controller
 {
     public function actionIndex(){
-        $products = Basket::getBasket(session_id());
+        $products = (new BasketRepository())->getBasket(session_id());
         echo $this->render('basket', ['products' => $products]);
     }
 
@@ -19,13 +21,14 @@ class BasketController extends Controller
 //        $id = $data->id;
 
         $id = (int)(new Request())->getParams()['id'];
+        $basket = new Basket(session_id(),$id);
 
-        (new Basket(session_id(),$id))->save();
+        (new BasketRepository())->save($basket);
 
         //возвращаем количество элементов в корзине
         echo json_encode([
             'status' => 'ok',
-            'count' => Basket::getCountWhere('session_id', session_id()),
+            'count' => (new BasketRepository())->getCountWhere('session_id', session_id()),
         ]);
         die();
     }
@@ -33,10 +36,10 @@ class BasketController extends Controller
     public function actionDelete(){
         $id = (int)(new Request())->getParams()['id'];
 
-        $basket = (new Basket())->getOne($id);
+        $basket = (new BasketRepository())->getOne($id);
         $session = session_id();
         if($session == $basket->session_id){
-            $basket->delete();
+            (new BasketRepository())->delete($basket);
         }
         else{
             die;
@@ -46,7 +49,7 @@ class BasketController extends Controller
         //возвращаем количество элементов в корзине
         echo json_encode([
             'status' => 'ok',
-            'count' => Basket::getCountWhere('session_id', session_id()),
+            'count' => (new BasketRepository())->getCountWhere('session_id', session_id()),
         ]);
 //        header("Location: " . $_SERVER['HTTP_REFERER']);
         die();

@@ -12,7 +12,7 @@ class ProductRepository extends Repository
         return Product::class;
     }
 
-    public static function getTableName()
+    public function getTableName()
     {
         return "products";
     }

@@ -12,7 +12,7 @@ abstract class Repository implements IModel
     public function getOneWhere($field, $value){
         $tableName = $this->getTableName();
         $sql = "SELECT * FROM {$tableName} WHERE `{$field}`=:value";
-        return Db::getInstance()->queryObject($sql, ['value' => $value], static::class);
+        return Db::getInstance()->queryObject($sql, ['value' => $value], $this->getEntityClass());
     }
 
 
@@ -20,7 +20,7 @@ abstract class Repository implements IModel
     {
         $tableName = $this->getTableName();
         $sql = "SELECT * FROM {$tableName} WHERE id = :id";
-        return Db::getInstance()->queryObject($sql, ['id' => $id], static::class);
+        return Db::getInstance()->queryObject($sql, ['id' => $id], $this->getEntityClass());
     }
 
     //TODO сделать похожий метод getSummWhere

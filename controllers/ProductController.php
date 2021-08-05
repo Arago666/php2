@@ -5,7 +5,7 @@ namespace app\controllers;
 
 
 use app\engine\Request;
-use app\model\Product;
+use app\model\repositories\ProductRepository;
 
 class ProductController extends Controller
 {
@@ -13,7 +13,7 @@ class ProductController extends Controller
 //        $page = (int)$_GET['page'];
         $page = (int)(new Request())->getParams()['page'];
         echo $this->render('catalog',[
-            'catalog' => Product::getLimit(($page + 1) * 2),
+            'catalog' => (new ProductRepository())->getLimit(($page + 1) * 2),
             'page' => ++$page
         ]);
     }
@@ -21,9 +21,9 @@ class ProductController extends Controller
     public function actionCard(){
 //        $id = (int)$_GET['id'];
         $id = (int)(new Request())->getParams()['id'];
-        var_dump(Product::getOne($id));
+        //var_dump(Product::getOne($id));
         echo $this->render('card',[
-            'product' => Product::getOne($id)
+            'product' => (new ProductRepository())->getOne($id)
         ]);
     }
 
