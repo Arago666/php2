@@ -1,12 +1,12 @@
 <?php
 session_start();
 include realpath("../config/config.php");
-include realpath("../engine/Autoload.php");
+//include realpath("../engine/Autoload.php");
 use app\model\{Product, User};
 use app\engine\{Render, Request};
 
-spl_autoload_register([new Autoload(), 'loadClass']);
-//include realpath("../vendor/autoload.php");
+//spl_autoload_register([new Autoload(), 'loadClass']);
+include realpath("../vendor/autoload.php");
 
 try{
 
