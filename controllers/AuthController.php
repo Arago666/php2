@@ -1,21 +1,17 @@
 <?php
 
-
 namespace app\controllers;
 
-
-
-
-use app\model\entities\User;
+use app\engine\App;
 use app\model\repositories\UserRepository;
 
 class AuthController extends Controller
 {
     public function actionLogin(){
-        //TODO Переделать на Request
-        $login = $_POST['login'];
-        $pass = $_POST['pass'];
-        if((new UserRepository())->auth($login, $pass)){
+
+        $login = App::call()->request->getParams()['login'];
+        $pass = App::call()->request->getParams()['pass'];
+        if(App::call()->userRepository->auth($login, $pass)){
             header("Location: " . $_SERVER['HTTP_REFERER']);
         } else{
             die("Неверный логин или пароль");

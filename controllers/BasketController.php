@@ -1,8 +1,8 @@
 <?php
 
-
 namespace app\controllers;
 
+use app\engine\App;
 use app\engine\Request;
 
 use app\model\entities\Basket;
@@ -11,7 +11,7 @@ use app\model\repositories\BasketRepository;
 class BasketController extends Controller
 {
     public function actionIndex(){
-        $products = (new BasketRepository())->getBasket(session_id());
+        $products = App::call()->basketRepository->getBasket(session_id());
         echo $this->render('basket', ['products' => $products]);
     }
 
@@ -20,26 +20,26 @@ class BasketController extends Controller
 //        $data = json_decode(file_get_contents('php://input'));
 //        $id = $data->id;
 
-        $id = (int)(new Request())->getParams()['id'];
+        $id = (int)App::call()->request->getParams()['id'];
         $basket = new Basket(session_id(),$id);
 
-        (new BasketRepository())->save($basket);
+        App::call()->basketRepository->save($basket);
 
         //возвращаем количество элементов в корзине
         echo json_encode([
             'status' => 'ok',
-            'count' => (new BasketRepository())->getCountWhere('session_id', session_id()),
+            'count' => App::call()->basketRepository->getCountWhere('session_id', session_id()),
         ]);
         die();
     }
 
     public function actionDelete(){
-        $id = (int)(new Request())->getParams()['id'];
+        $id = (int)App::call()->request->getParams()['id'];
 
-        $basket = (new BasketRepository())->getOne($id);
+        $basket = App::call()->basketRepository->getOne($id);
         $session = session_id();
         if($session == $basket->session_id){
-            (new BasketRepository())->delete($basket);
+            App::call()->basketRepository->delete($basket);
         }
         else{
             die;
@@ -47,6 +47,7 @@ class BasketController extends Controller
         //Basket::getOne($id)->delete();
 
         //возвращаем количество элементов в корзине
+        header('Content-Type: application/json');
         echo json_encode([
             'status' => 'ok',
             'count' => (new BasketRepository())->getCountWhere('session_id', session_id()),

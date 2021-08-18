@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\engine\App;
 use app\engine\Render;
 use app\interfaces\IRenderer;
 use app\model\repositories\BasketRepository;
@@ -41,13 +42,12 @@ abstract class Controller
             return $this->renderTemplate("layouts/{$this->layout}",[
 //                'menu' => $this->renderTemplate('menu',$params),
                 'menu' => $this->renderTemplate('menu',[
-                    'count' => (new BasketRepository())->getCountWhere('session_id', session_id()),
-                    'auth' => (new UserRepository())->isAuth(),
-                    'username' => (new UserRepository())->getName()
+                    'count' => App::call()->basketRepository->getCountWhere('session_id', session_id()),
+                    'auth' => App::call()->userRepository->isAuth(),
+                    'username' => App::call()->userRepository->getName()
                 ]),
                 'content' => $this->renderTemplate($template,$params)
             ]);
-            //TODO session id 'count' => Basket::getCountWhere('session_id', session_id())
         }else{
             return $this->renderTemplate($template, $params);
         }

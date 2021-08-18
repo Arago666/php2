@@ -1,0 +1,85 @@
+<?php
+
+
+namespace app\engine;
+
+use app\model\repositories\BasketRepository;
+use app\model\repositories\ProductRepository;
+use app\model\repositories\UserRepository;
+use app\traits\Tsingletone;
+
+/**
+ * Class App
+ * @property Request $request
+ * @property BasketRepository $basketRepository
+ * @property UserRepository $userRepository
+ * @property ProductRepository $productRepository
+ * @property Db $db
+ */
+class App
+{
+    use Tsingletone;
+    public $config;
+
+    /**
+     * @var Storage
+     */
+    //хранилище компонентов-объектов
+    private $components;
+
+    private $controller;
+    private $action;
+
+    /**
+     * @return static
+     */
+    public static function call(){
+        return static::getInstance();
+    }
+
+    public function runController()
+    {
+        $this->controller = $this->request->getControllerName() ?: 'product';
+        $this->action = $this->request->getActionName();
+
+        $controllerClass = $this->config['controllers_namespaces'] . ucfirst($this->controller) . "Controller";
+
+        if(class_exists($controllerClass)){
+            $controller = new $controllerClass(new Render());
+            $controller->runAction($this->action);
+        } else{
+            echo "Не правильный контроллер";
+        }
+    }
+
+    //создание компонента при обращении, возвращает объект для хранилища
+    public function createComponent($name){
+        if(isset($this->config['components'][$name])){
+            $params = $this->config['components'][$name];
+            $class = $params['class'];
+            if(class_exists($class)){
+                unset($params['class']);
+                //воспользуемся библиотекой ReflectionClass для создания класса
+                //Класс PDO, используется тут для автоматической подстановки параметров в конструктор
+                //просто return нельзя, т.к. не будут переданы параметры для контсруктора
+                $reflection = new \ReflectionClass($class);
+                return $reflection->newInstanceArgs($params);
+            }
+//            die("Класса {$class} не существует в конфигурации системы!");
+        }
+//        die("Компонента {$name} не существует в конфигурации системы!");
+        return null;
+    }
+
+    public function run($config){
+        $this->config = $config;
+        $this->components = new Storage();
+        $this->runController();
+    }
+
+    //чтобы обращаться к компонентам как к свойствам, переопределим геттер
+    public function __get($name){
+        return $this->components->get($name);
+    }
+
+}
